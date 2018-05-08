@@ -568,7 +568,18 @@ class AliOssAdapter extends AbstractAdapter
     public function getUrl( $path )
     {
         if (!$this->has($path)) throw new FileNotFoundException($filePath.' not found');
-        return ( $this->ssl ? 'https://' : 'http://' ) . ( $this->isCname ? ( $this->cdnDomain == '' ? $this->endPoint : $this->cdnDomain ) : $this->bucket . '.' . $this->endPoint ) . '/' . ltrim($path, '/');
+
+        if ($this->isCname) {
+            if (is_array($this->cdnDomain)) { // 采用多域名模式（同一个图片，域名保持一致，有利于客户端缓存）
+                $domain = $this->cdnDomain[crc32($path) % count($this->cdnDomain)];
+            } else { // 采用常规的单域名 CDN 模式
+                $domain = $this->cdnDomain == '' ? $this->endPoint : $this->cdnDomain;
+            }
+        } else { // 采用非直接访问 OSS
+            $domain = $this->bucket . '.' . $this->endPoint;
+        }
+
+        return ( $this->ssl ? 'https://' : 'http://' ) . $domain . '/' . ltrim($path, '/');
     }
 
     /**

@@ -1,9 +1,60 @@
+# 注意！！！
+
+本包主要自用，建议安装原版 [jacobcyl/Aliyun-oss-storage](https://github.com/jacobcyl/Aliyun-oss-storage)
+
+更新点：
+（1）修复了 isCName 开启后的 debug
+（2）支持多 CDN 子域名绑定，同一个图片，域名保持一致，有利于客户端缓存（适合大型项目使用）
+
+
+## 开启多子域名绑定
+
+附件上传配置文件 app/filesystems.php:
+```php
+'disks'=>[
+    ...
+    'oss' => [
+            'driver'        => 'oss',
+            'access_id'     => env('ALIYUN_ACCESS_ID', ''),
+            'access_key'    => env('ALIYUN_ACCESS_SECRET', ''),
+            'bucket'        => env('OSS_BUCKET', ''),
+            'endpoint'      => env('OSS_ENDPOINT', ''), // OSS 外网节点或自定义外部域名
+            'cdnDomain'     => env('OSS_CDN_DOMAIN', ''), // 如果isCName为true, getUrl会判断cdnDomain是否设定来决定返回的url
+            'cdnDomainList' => env('OSS_CDN_DOMAIN_LIST') ? array_filter(explode(',', env('OSS_CDN_DOMAIN_LIST'))) : [], // 支持多个子域名轮询，如设置则优先于（覆盖） cdnDomain 使用
+            'ssl'           => env('OSS_SSL', false), // true to use 'https://' and false to use 'http://'. default is false,
+            'isCName'       => env('OSS_IS_CNAME', false), // 是否使用自定义域名,true: 则Storage.url()会使用自定义的cdn或域名生成文件url， false: 则使用外部节点生成url
+            'debug'         => env('OSS_DEBUG', false),
+    ],
+    ...
+]
+```
+
+根配置文件 .env
+CDN 域名列表不限制个数，用半角逗号分隔
+如果配置了 则 LIST，OSS_CDN_DOMAIN 配不配无所谓
+
+```
+ALIYUN_ACCESS_ID=xxxxxxx
+ALIYUN_ACCESS_SECRET=xxxxxxx
+
+FILESYSTEM_DRIVER=oss
+OSS_DEBUG=true
+OSS_BUCKET=xxx
+OSS_ENDPOINT=xxx.oss-cn-hangzhou.aliyuncs.com
+OSS_IS_CNAME=true
+OSS_CDN_DOMAIN=oss.xxx.net
+OSS_CDN_DOMAIN_LIST=oss.xxx.net,oss1.xxx.net,oss2.xxx.net,oss3.xxx.net
+```
+
+
+# 以下是原版 README
+
 # Aliyun-oss-storage for Laravel 5+
 Aliyun oss filesystem storage adapter for laravel 5. You can use Aliyun OSS just like laravel Storage as usual.    
 借鉴了一些优秀的代码，综合各方，同时做了更多优化，将会添加更多完善的接口和插件，打造Laravel最好的OSS Storage扩展
 ## Inspired By
 - [thephpleague/flysystem-aws-s3-v2](https://github.com/thephpleague/flysystem-aws-s3-v2)
-- [apollopy/flysystem-aliyun-oss](https://github.com/apollopy/flysystem-aliyun-oss) 
+- [apollopy/flysystem-aliyun-oss](https://github.com/apollopy/flysystem-aliyun-oss)
 
 ## Require
 - Laravel 5+
@@ -18,7 +69,7 @@ to your composer.json. Then run `composer install` or `composer update`.
 Or you can simply run below command to install:
 
     "composer require jacobcyl/ali-oss-storage:^2.1"
-    
+
 Then in your `config/app.php` add this line to providers array:
 ```php
 Jacobcyl\AliOSS\AliOssServiceProvider::class,
