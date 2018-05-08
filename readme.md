@@ -3,7 +3,7 @@
 本包主要自用，建议安装原版 [jacobcyl/Aliyun-oss-storage](https://github.com/jacobcyl/Aliyun-oss-storage)
 
 更新点：
-（1）修复了 isCName 开启后的 debug
+（1）修复了 isCName 开启后的 bug
 （2）支持多 CDN 子域名绑定，同一个图片，域名保持一致，有利于客户端缓存（适合大型项目使用）
 
 
@@ -30,8 +30,9 @@
 ```
 
 根配置文件 .env
-CDN 域名列表不限制个数，用半角逗号分隔
-如果配置了 则 LIST，OSS_CDN_DOMAIN 配不配无所谓
+
+- CDN 域名列表不限制个数，用半角逗号分隔
+- 如果配置了LIST， 则 OSS_CDN_DOMAIN 配不配无所谓
 
 ```
 ALIYUN_ACCESS_ID=xxxxxxx
