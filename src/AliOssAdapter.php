@@ -15,7 +15,7 @@ use League\Flysystem\Util;
 use OSS\Core\OssException;
 use OSS\OssClient;
 use Log;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class AliOssAdapter extends AbstractAdapter
 {
@@ -67,7 +67,7 @@ class AliOssAdapter extends AbstractAdapter
     protected $bucket;
 
     protected $endPoint;
-    
+
     protected $cdnDomain;
 
     protected $ssl;
@@ -549,7 +549,7 @@ class AliOssAdapter extends AbstractAdapter
             $this->logErr(__FUNCTION__, $e);
             return false;
         }
-        
+
         if ($acl == OssClient::OSS_ACL_TYPE_PUBLIC_READ ){
             $res['visibility'] = AdapterInterface::VISIBILITY_PUBLIC;
         }else{
@@ -619,7 +619,7 @@ class AliOssAdapter extends AbstractAdapter
 
             return $result;
         }
-        
+
         $result = array_merge($result, Util::map($object, static::$resultMap), ['type' => 'file']);
 
         return $result;
