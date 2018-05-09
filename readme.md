@@ -47,6 +47,14 @@ OSS_CDN_DOMAIN=oss.xxx.net
 OSS_CDN_DOMAIN_LIST=oss.xxx.net,oss1.xxx.net,oss2.xxx.net,oss3.xxx.net
 ```
 
+## 安装命令
+
+"composer require orzcc/aliyun-oss-storage:^2.1"
+
+Then in your `config/app.php` add this line to providers array:
+```php
+Jacobcyl\AliOSS\AliOssServiceProvider::class,
+```
 
 # 以下是原版 README
 
