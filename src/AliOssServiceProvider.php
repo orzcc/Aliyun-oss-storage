@@ -33,15 +33,15 @@ class AliOssServiceProvider extends ServiceProvider
         {
             $accessId  = $config['access_id'];
             $accessKey = $config['access_key'];
-            // 优先采用 cdnDomainList
-            $cdnDomain = empty($config['cdnDomainList']) ? (empty($config['cdnDomain']) ? '' : $config['cdnDomain']) : $config['cdnDomainList'];
+
+            $cdnDomain = empty($config['cdnDomain']) ? '' : $config['cdnDomain'];
             $bucket    = $config['bucket'];
             $ssl       = empty($config['ssl']) ? false : $config['ssl'];
             $isCname   = empty($config['isCName']) ? false : $config['isCName'];
             $debug     = empty($config['debug']) ? false : $config['debug'];
 
             $endPoint  = $config['endpoint']; // 默认作为外部节点
-            $epInternal= empty($config['endpoint_internal']) ? $endPoint : $config['endpoint_internal']; // 内部节点
+            $epInternal= $isCname?$cdnDomain:(empty($config['endpoint_internal']) ? $endPoint : $config['endpoint_internal']); // 内部节点
 
             if($debug) Log::debug('OSS config:', $config);
 
@@ -50,7 +50,7 @@ class AliOssServiceProvider extends ServiceProvider
 
             //Log::debug($client);
             $filesystem =  new Filesystem($adapter);
-            
+
             $filesystem->addPlugin(new PutFile());
             $filesystem->addPlugin(new PutRemoteFile());
             //$filesystem->addPlugin(new CallBack());
