@@ -567,7 +567,7 @@ class AliOssAdapter extends AbstractAdapter
      */
     public function getUrl( $path )
     {
-        if (!$this->has($path)) throw new FileNotFoundException($filePath.' not found');
+        if (!$this->has($path)) throw new FileNotFoundException($path.' not found');
 
         if ($this->isCname) {
             if (is_array($this->cdnDomain)) { // 采用多域名模式（同一个图片，域名保持一致，有利于客户端缓存）
